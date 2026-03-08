@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Phone, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language-context";
 import { LanguageSwitcher } from "./language-switcher";
 
@@ -10,9 +10,16 @@ const PHONE_NUMBER = "+905435067407";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const bgOpacity = useTransform(scrollYProgress, [0, 0.05], [0, 1]);
+  const [scrolled, setScrolled] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { href: "#about", label: t.nav.about },
@@ -29,9 +36,8 @@ export function Navigation() {
         animate={{ y: 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
       >
-        <motion.div
-          style={{ opacity: bgOpacity }}
-          className="absolute inset-0 border-b border-border/50 bg-background/80 backdrop-blur-md"
+        <div
+          className={`absolute inset-0 border-b border-border/50 bg-background/80 backdrop-blur-md transition-opacity duration-300 ${scrolled ? "opacity-100" : "opacity-0"}`}
         />
         <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           {/* Logo */}
