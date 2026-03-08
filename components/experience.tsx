@@ -1,31 +1,19 @@
 "use client";
 
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
 import { useLanguage } from "@/lib/language-context";
 
 export function Experience() {
-  const containerRef = useRef(null);
   const textRef = useRef(null);
   const isInView = useInView(textRef, { once: true, margin: "-100px" });
   const { t } = useLanguage();
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]);
 
   return (
-    <section id="experience" ref={containerRef} style={{ position: 'relative' }} className="relative min-h-screen overflow-hidden py-32">
-      {/* Parallax Background */}
-      <motion.div
-        style={{ y }}
-        className="absolute inset-0 -z-10"
-      >
+    <section id="experience" className="relative min-h-screen overflow-hidden py-32">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10">
         <Image
           src="/images/experience.jpg"
           alt="VINOGUZ Dining Experience"
@@ -34,13 +22,10 @@ export function Experience() {
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-background/80" />
-      </motion.div>
+      </div>
 
       {/* Content */}
-      <motion.div
-        style={{ opacity }}
-        className="relative z-10 mx-auto max-w-7xl px-6"
-      >
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div ref={textRef} className="mx-auto max-w-4xl text-center">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
@@ -94,7 +79,7 @@ export function Experience() {
             </motion.div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
